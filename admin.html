@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SLN Enterprises Invoice Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* --- General Styles --- */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
+    .container {
+      max-width: 1123px; /* Matched to invoice width */
+      margin: auto;
+      padding: 20px;
+      background-color: white;
+    }
+    .center { text-align: center; }
+    .hidden { display: none; }
+    input, select {
+      padding: 8px;
+      width: 100%;
+      margin: 5px 0 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-family: 'Roboto', Arial, sans-serif;
+      border-radius: 5px;
+      font-size: 16px;
+      margin: 5px;
+    }
+    button:hover { background-color: #45a049; }
+    h2.company-title {
+      font-size: 30px;
+      color: #38761d;
+      font-weight: 700;
+    }
+
+    /* --- Invoice Styles --- */
+    .invoice-container {
+      width: 1123px;
+      height: auto;
+      margin: auto;
+      background-color: #fff;
+      border: 1px solid #dcdcdc;
+      box-sizing: border-box;
+      color: #000;
+      font-size: 14px;
+    }
+    .title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 8px 0;
+      background-color: #d9ead3;
+      border-top: 1px solid #bfbfbf;
+      border-bottom: 1px solid #bfbfbf;
+    }
+    .invoice-header {
+      display: flex;
+      padding: 20px 40px;
+      border-top: 5px solid #6aa84f;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    .logo {
+      width: 98px;
+      height: 98px;
+      margin-right: 15px;
+    }
+    .company-details {
+      text-align: left;
+      flex-grow: 1;
+    }
+    .company-header-flex {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+    .company-name {
+      font-size: 32px;
+      font-weight: bold;
+      color: #38761d;
+      margin: 0;
+      flex-shrink: 0;
+    }
+    .company-details p {
+      margin: 5px 0 0;
+      font-size: 13px;
+    }
+    .company-info-table {
+      font-size: 13px;
+    }
+    .company-info-table td {
+      padding: 1px 15px 1px 0;
+    }
+    .details-section {
+      display: flex;
+      background-color: #d9ead3;
+      border-bottom: 1px solid #bfbfbf;
+      padding: 10px 0;
+    }
+    .bill-to, .invoice-details-box {
+      width: 50%;
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
+    .bill-to {
+      border-right: 1px solid #bfbfbf;
+      padding-left: 40px;
+    }
+    .invoice-details-box {
+      padding-left: 20px;
+    }
+    .details-section table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .details-section td {
+      vertical-align: top;
+      padding: 2px 0;
+    }
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .items-table th, .items-table td {
+      border: 1px solid #bfbfbf;
+      padding: 8px;
+      font-size: 14px;
+      vertical-align: top;
+    }
+    .items-table thead th {
+      background-color: #f2f2f2;
+      text-align: center;
+      font-weight: bold;
+    }
+    .items-table .col-slno { width: 5%; text-align: center; }
+    .items-table .col-item { width: 35%; }
+    .items-table .col-hsn { width: 10%; text-align: center; }
+    .items-table .col-qty { width: 10%; text-align: right; }
+    .items-table .col-unit { width: 10%; text-align: center; }
+    .items-table .col-price { width: 10%; text-align: right; }
+    .items-table .col-amount { width: 20%; text-align: right; font-weight: bold; }
+    
+    .totals-section td {
+      font-weight: bold;
+      border: 1px solid #bfbfbf;
+    }
+    .totals-section .label {
+      text-align: right;
+      padding-right: 15px;
+    }
+    .totals-section .value {
+      text-align: right;
+      padding-right: 8px;
+    }
+    .highlight-total {
+      background-color: #fff2cc;
+    }
+    .totals-spacer {
+        border-style: solid;
+        border-width: 1px;
+        border-color: #bfbfbf #bfbfbf #bfbfbf transparent;
+    }
+    .amount-words-cell {
+        padding: 15px 40px !important;
+        text-align: left !important;
+        border-top: 1px solid #bfbfbf !important;
+    }
+
+    .bank-details-section {
+      display: flex;
+      border-top: 1px solid #bfbfbf;
+      border-bottom: 1px solid #bfbfbf;
+    }
+    .bank-info, .signature-area {
+      width: 50%;
+      padding: 10px 0;
+      box-sizing: border-box;
+    }
+    .bank-info {
+      padding-left: 40px;
+    }
+    .bank-header {
+      background-color: #d9ead3;
+      font-weight: bold;
+      padding: 5px 10px;
+      display: inline-block;
+      border: 1px solid #bfbfbf;
+      border-left: none;
+      margin-bottom: 5px;
+    }
+    .signature-area {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid #bfbfbf;
+      margin: 10px 40px 10px 0;
+      padding: 10px;
+    }
+    .signature-area p {
+      margin: 0;
+    }
+    .footer {
+      background-color: #d9ead3;
+      text-align: center;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* --- Print Styles --- */
+    @media print {
+      body { background-color: #fff; }
+      body * { visibility: hidden; }
+      #invoice, #invoice * {
+        visibility: visible;
+      }
+      #invoice {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none;
+        margin: 0;
+        padding: 0;
+      }
+      .invoice-actions { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="passwordScreen" class="container center">
+  <h2 class="company-title">SLN Enterprises</h2>
+  <h3>Enter Password</h3>
+  <input type="password" id="password" placeholder="Password" onkeydown="if(event.key==='Enter'){checkPassword()}" />
+  <button onclick="checkPassword()">Submit</button>
+  <p id="wrongPasswordMsg" style="color:red; display:none;">Incorrect Password</p>
+</div>
+
+<div id="formScreen" class="container hidden">
+  <h2 class="company-title center">SLN Enterprises</h2>
+  <h3 class="center">ENTER CUSTOMER DETAILS</h3>
+  <form id="customerForm">
+    <label>Name and address:</label>
+    <input type="text" id="name" required>
+    <label>Contact number:</label>
+    <input type="tel" id="contact" required maxlength="10" pattern="\d{10}" oninput="this.value = this.value.replace(/\D/g, '').substring(0, 10);" placeholder="10 digits only">
+    <label>Invoice number:</label>
+    <input type="text" id="invoiceNo" required>
+    <label>Date:</label>
+    <input type="date" id="date" required>
+    <label>Place of Supply:</label>
+    <input type="text" id="place" required>
+    <label>Number of Items:</label>
+    <input type="number" id="itemCount" min="1" value="1" onchange="generateItemInputs()">
+    <div id="itemFields"></div>
+    
+    <hr>
+    <div style="text-align: right; padding-right: 10px; font-size: 1.2em;">
+      <p style="margin: 10px 0;"><strong>Total Amount: ₹ <span id="formTotal">0.00</span></strong></p>
+    </div>
+    <label>Received:</label>
+    <input type="number" id="received" step="0.01" placeholder="0.00" oninput="updateFormCalculations()" required>
+    <div style="text-align: right; padding-right: 10px; font-size: 1.2em; color: #d9534f;">
+       <p style="margin: 10px 0;"><strong>Balance: ₹ <span id="formBalance">0.00</span></strong></p>
+    </div>
+    
+    <div class="center">
+      <button type="submit">Generate Invoice</button>
+      <button type="button" onclick="document.getElementById('customerForm').reset(); generateItemInputs();">Reset Fields</button>
+    </div>
+  </form>
+</div>
+
+<div id="invoice" class="hidden">
+  <div class="invoice-container">
+      <div class="title">Tax Invoice</div>
+
+      <div class="invoice-header">
+          <div class="logo-container">
+              <img src="SLN_logo.png" alt="SLN Enterprises Logo" class="logo">
+              <div class="company-details">
+                  <div class="company-header-flex">
+                      <h1 class="company-name">SLN ENTERPRISES</h1>
+                      <table class="company-info-table">
+                          <tbody>
+                            <tr>
+                              <td>Phone: <strong>9739099538</strong></td>
+                              <td>Email: <strong>Slnplates@gmail.com</strong></td>
+                            </tr>
+                            <tr>
+                              <td>GSTIN: <strong>29BMQPN9871DIZ9</strong></td>
+                              <td>State: <strong>29-Karnataka</strong></td>
+                            </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                  <p>NO 500/535 S L N ENTERPRISES HOSAKERE ROAD Chelur 572117</p>
+              </div>
+          </div>
+      </div>
+
+      <div class="details-section">
+          <div class="bill-to">
+              <table>
+                  <tbody><tr>
+                      <td style="width: 85px; font-weight: bold; vertical-align: top;">Bill To:</td>
+                      <td><strong><span id="invName"></span></strong></td>
+                  </tr>
+                  <tr>
+                      <td style="font-weight: bold;">Contact No:</td>
+                      <td><strong><span id="invContact"></span></strong></td>
+                  </tr>
+              </tbody></table>
+          </div>
+          <div class="invoice-details-box">
+              <strong style="font-size: 15px;">Invoice Details:</strong>
+              <table style="margin-top: 5px;">
+                  <tbody><tr>
+                      <td style="width: 120px;">No:</td>
+                      <td><strong><span id="invNo"></span></strong></td>
+                  </tr>
+                  <tr>
+                      <td>Date:</td>
+                      <td><strong><span id="invDate"></span></strong></td>
+                  </tr>
+                  <tr>
+                      <td>Place Of Supply:</td>
+                      <td><strong><span id="invPlace"></span></strong></td>
+                  </tr>
+              </tbody></table>
+          </div>
+      </div>
+
+      <table class="items-table">
+          <thead>
+              <tr>
+                  <th class="col-slno">Sl No</th>
+                  <th class="col-item">Item Name</th>
+                  <th class="col-hsn">HSN / SAC</th>
+                  <th class="col-qty">Quantity</th>
+                  <th class="col-unit">Unit</th>
+                  <th class="col-price">Price/unit</th>
+                  <th class="col-amount">Amount</th>
+              </tr>
+          </thead>
+          <tbody id="invoiceItems">
+          </tbody>
+      </table>
+      
+      <table class="items-table totals-section" style="border-top: none;">
+          <tbody>
+              <tr>
+                  <td class="totals-spacer" colspan="5"></td>
+                  <td class="label" style="width: 10%;">Sub Total</td>
+                  <td class="value col-amount" style="width: 20%;"><span id="subTotalAmt"></span></td>
+              </tr>
+              <tr class="highlight-total">
+                  <td class="totals-spacer" colspan="5"></td>
+                  <td class="label">Total</td>
+                  <td class="value col-amount"><span id="totalAmt"></span></td>
+              </tr>
+              <tr>
+                  <td class="totals-spacer" colspan="5"></td>
+                  <td class="label">Received</td>
+                  <td class="value col-amount"><span id="invReceived"></span></td>
+              </tr>
+              <tr>
+                  <td class="totals-spacer" colspan="5"></td>
+                  <td class="label">Balance</td>
+                  <td class="value col-amount"><span id="invBalance"></span></td>
+              </tr>
+              <tr>
+                  <td colspan="7" class="amount-words-cell">
+                      <strong>Invoice Amount in words:</strong><br>
+                      <span id="amtWords" style="font-weight:normal;"></span>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+
+      <div class="bank-details-section">
+          <div class="bank-info">
+              <div class="bank-header">Bank Details</div>
+              <p>Name: <strong>INDIAN OVERSEAS BANK, HEGGERE</strong></p>
+              <p>Account No. : <strong>319802000000169</strong></p>
+              <p>IFSC code : <strong>IOBA0003198</strong></p>
+              <p>Account holder's name : <strong>SLN ENTERPRISES</strong></p>
+          </div>
+          <div class="signature-area">
+              <p style="font-weight: bold; text-align:center;">For SLN ENTERPRISES:</p>
+              <p style="margin-top: 50px; text-align:center;">Authorized Signatory</p>
+          </div>
+      </div>
+      
+      <div class="footer">
+          Thanks for doing business with us!
+      </div>
+  </div>
+
+  <div class="invoice-actions center">
+      <button onclick="goBack()">Go Back</button>
+      <button onclick="window.print()">Download as PDF</button>
+  </div>
+</div>
+
+
+<script>
+  const correctPassword = "niru@sln123";
+  function checkPassword() {
+    const entered = document.getElementById("password").value;
+    if (entered === correctPassword) {
+      document.getElementById("wrongPasswordMsg").style.display = "none";
+      document.getElementById("passwordScreen").classList.add("hidden");
+      document.getElementById("formScreen").classList.remove("hidden");
+      document.getElementById('date').valueAsDate = new Date();
+      generateItemInputs();
+    } else {
+      document.getElementById("wrongPasswordMsg").style.display = "block";
+    }
+  }
+
+  function updateFormCalculations() {
+      let currentTotal = 0;
+      const qtys = document.querySelectorAll("#formScreen .qty");
+      const prices = document.querySelectorAll("#formScreen .price");
+
+      for (let i = 0; i < qtys.length; i++) {
+          const qty = parseFloat(qtys[i].value) || 0;
+          const price = parseFloat(prices[i].value) || 0;
+          currentTotal += qty * price;
+      }
+
+      const received = parseFloat(document.getElementById("received").value) || 0;
+      const balance = currentTotal - received;
+
+      document.getElementById("formTotal").innerText = currentTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      document.getElementById("formBalance").innerText = balance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function generateItemInputs() {
+    const count = parseInt(document.getElementById("itemCount").value);
+    const container = document.getElementById("itemFields");
+    container.innerHTML = "";
+    for (let i = 0; i < count; i++) {
+      container.innerHTML += `
+        <h4>Item ${i + 1}</h4>
+        <label>Item Name:</label><input type="text" class="itemName" value="ARECA LEAF (EXPORT QUALITY)" required>
+        <label>HSN:</label><input type="text" class="hsn" value="4602" required>
+        <label>Price (per unit):</label><input type="number" class="price" value="4" step="0.01" oninput="updateFormCalculations()" required>
+        <label>Quantity:</label><input type="number" class="qty" oninput="updateFormCalculations()" required>
+        <hr>
+      `;
+    }
+    updateFormCalculations();
+  }
+  
+  function numberToWords(num) {
+    const a = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+    const b = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+    if ((num = num.toString()).length > 9) return "Overflow";
+    const n = ("000000000" + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+    if (!n) return;
+    let str = "";
+    str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + " " + a[n[1][1]]) + " Crore " : "";
+    str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + " " + a[n[2][1]]) + " Lakh " : "";
+    str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + " " + a[n[3][1]]) + " Thousand " : "";
+    str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + " " + a[n[4][1]]) + " Hundred " : "";
+    str += (n[5] != 0) ? ((str != "") ? "and " : "") + (a[Number(n[5])] || b[n[5][0]] + " " + a[n[5][1]]) : "";
+    if (str === "") return "Zero Rupees Only";
+    return str.trim() + " Rupees Only";
+  }
+
+
+  document.getElementById("customerForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const name = document.getElementById("name").value;
+    const contact = document.getElementById("contact").value;
+    const invoiceNo = document.getElementById("invoiceNo").value;
+    const rawDate = document.getElementById("date").value;
+    const dateObj = new Date(rawDate);
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const year = dateObj.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`;
+
+    const place = document.getElementById("place").value;
+    const received = parseFloat(document.getElementById("received").value) || 0;
+
+    const names = document.querySelectorAll(".itemName");
+    const hsns = document.querySelectorAll(".hsn");
+    const qtys = document.querySelectorAll(".qty");
+    const prices = document.querySelectorAll(".price");
+
+    document.getElementById("invName").innerText = name;
+    document.getElementById("invContact").innerText = contact;
+    document.getElementById("invNo").innerText = invoiceNo;
+    document.getElementById("invDate").innerText = formattedDate;
+    document.getElementById("invPlace").innerText = place;
+
+    let total = 0;
+    let rows = "";
+
+    for (let i = 0; i < names.length; i++) {
+        const qty = parseFloat(qtys[i].value) || 0;
+        const price = parseFloat(prices[i].value) || 0;
+        const amt = qty * price;
+        total += amt;
+        rows += `<tr>
+            <td style="text-align: center;">${i + 1}</td>
+            <td>${names[i].value}</td>
+            <td style="text-align: center;">${hsns[i].value}</td>
+            <td style="text-align: right;">${qty.toLocaleString('en-IN')}</td>
+            <td style="text-align: center;">Pcs</td>
+            <td style="text-align: right;">₹ ${price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td class="col-amount">₹ ${amt.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        </tr>`;
+    }
+
+    document.getElementById("invoiceItems").innerHTML = rows;
+    
+    const balance = total - received;
+
+    const formattedTotal = '₹ ' + total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById("subTotalAmt").innerText = formattedTotal;
+    document.getElementById("totalAmt").innerText = formattedTotal;
+    document.getElementById("amtWords").innerText = numberToWords(Math.round(total));
+
+    const formattedReceived = '₹ ' + received.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById("invReceived").innerText = formattedReceived;
+    
+    const formattedBalance = '₹ ' + balance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById("invBalance").innerText = formattedBalance;
+
+    document.getElementById("formScreen").classList.add("hidden");
+    document.getElementById("invoice").classList.remove("hidden");
+  });
+
+  function goBack() {
+    document.getElementById("invoice").classList.add("hidden");
+    document.getElementById("formScreen").classList.remove("hidden");
+  }
+
+  // Set default date on initial load
+  document.getElementById('date').valueAsDate = new Date();
+</script>
+</body>
+</html>
