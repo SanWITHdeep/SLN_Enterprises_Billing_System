@@ -1,527 +1,253 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SLN Enterprises Invoice Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    /* --- General Styles --- */
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Roboto', Arial, sans-serif;
-      background-color: #f2f2f2;
-    }
-    .container {
-      max-width: 1123px; /* Matched to invoice width */
-      margin: auto;
-      padding: 20px;
-      background-color: white;
-    }
-    .center { text-align: center; }
-    .hidden { display: none; }
-    input, select {
-      padding: 8px;
-      width: 100%;
-      margin: 5px 0 15px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-family: 'Roboto', Arial, sans-serif;
-      border-radius: 5px;
-      font-size: 16px;
-      margin: 5px;
-    }
-    button:hover { background-color: #45a049; }
-    h2.company-title {
-      font-size: 30px;
-      color: #38761d;
-      font-weight: 700;
-    }
-
-    /* --- Invoice Styles --- */
-    .invoice-container {
-      width: 1123px;
-      height: auto;
-      margin: auto;
-      background-color: #fff;
-      border: 1px solid #dcdcdc;
-      box-sizing: border-box;
-      color: #000;
-      font-size: 14px;
-    }
-    .title {
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      padding: 8px 0;
-      background-color: #d9ead3;
-      border-top: 1px solid #bfbfbf;
-      border-bottom: 1px solid #bfbfbf;
-    }
-    .invoice-header {
-      display: flex;
-      padding: 20px 40px;
-      border-top: 5px solid #6aa84f;
-    }
-    .logo-container {
-      display: flex;
-      align-items: center;
-      width: 100%;
-    }
-    .logo {
-      width: 98px;
-      height: 98px;
-      margin-right: 15px;
-    }
-    .company-details {
-      text-align: left;
-      flex-grow: 1;
-    }
-    .company-header-flex {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-    }
-    .company-name {
-      font-size: 32px;
-      font-weight: bold;
-      color: #38761d;
-      margin: 0;
-      flex-shrink: 0;
-    }
-    .company-details p {
-      margin: 5px 0 0;
-      font-size: 13px;
-    }
-    .company-info-table {
-      font-size: 13px;
-    }
-    .company-info-table td {
-      padding: 1px 15px 1px 0;
-    }
-    .details-section {
-      display: flex;
-      background-color: #d9ead3;
-      border-bottom: 1px solid #bfbfbf;
-      padding: 10px 0;
-    }
-    .bill-to, .invoice-details-box {
-      width: 50%;
-      padding: 0 15px;
-      box-sizing: border-box;
-    }
-    .bill-to {
-      border-right: 1px solid #bfbfbf;
-      padding-left: 40px;
-    }
-    .invoice-details-box {
-      padding-left: 20px;
-    }
-    .details-section table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .details-section td {
-      vertical-align: top;
-      padding: 2px 0;
-    }
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .items-table th, .items-table td {
-      border: 1px solid #bfbfbf;
-      padding: 8px;
-      font-size: 14px;
-      vertical-align: top;
-    }
-    .items-table thead th {
-      background-color: #f2f2f2;
-      text-align: center;
-      font-weight: bold;
-    }
-    .items-table .col-slno { width: 5%; text-align: center; }
-    .items-table .col-item { width: 35%; }
-    .items-table .col-hsn { width: 10%; text-align: center; }
-    .items-table .col-qty { width: 10%; text-align: right; }
-    .items-table .col-unit { width: 10%; text-align: center; }
-    .items-table .col-price { width: 10%; text-align: right; }
-    .items-table .col-amount { width: 20%; text-align: right; font-weight: bold; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLN Enterprises - Sustainable Areca Leaf Plates</title>
     
-    .totals-section td {
-      font-weight: bold;
-      border: 1px solid #bfbfbf;
-    }
-    .totals-section .label {
-      text-align: right;
-      padding-right: 15px;
-    }
-    .totals-section .value {
-      text-align: right;
-      padding-right: 8px;
-    }
-    .highlight-total {
-      background-color: #fff2cc;
-    }
-    .totals-spacer {
-        border-style: solid;
-        border-width: 1px;
-        border-color: #bfbfbf #bfbfbf #bfbfbf transparent;
-    }
-    .amount-words-cell {
-        padding: 15px 40px !important;
-        text-align: left !important;
-        border-top: 1px solid #bfbfbf !important;
-    }
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Setting the default font family */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0FDF4; /* A very light green for the page background */
+        }
 
-    .bank-details-section {
-      display: flex;
-      border-top: 1px solid #bfbfbf;
-      border-bottom: 1px solid #bfbfbf;
-    }
-    .bank-info, .signature-area {
-      width: 50%;
-      padding: 10px 0;
-      box-sizing: border-box;
-    }
-    .bank-info {
-      padding-left: 40px;
-    }
-    .bank-header {
-      background-color: #d9ead3;
-      font-weight: bold;
-      padding: 5px 10px;
-      display: inline-block;
-      border: 1px solid #bfbfbf;
-      border-left: none;
-      margin-bottom: 5px;
-    }
-    .signature-area {
-      text-align: right;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border: 1px solid #bfbfbf;
-      margin: 10px 40px 10px 0;
-      padding: 10px;
-    }
-    .signature-area p {
-      margin: 0;
-    }
-    .footer {
-      background-color: #d9ead3;
-      text-align: center;
-      padding: 8px;
-      font-size: 12px;
-      font-weight: bold;
-    }
+        /* Custom class for the cascading animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
 
-    /* --- Print Styles --- */
-    @media print {
-      body { background-color: #fff; }
-      body * { visibility: hidden; }
-      #invoice, #invoice * {
-        visibility: visible;
-      }
-      #invoice {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        border: none;
-        margin: 0;
-        padding: 0;
-      }
-      .invoice-actions { display: none !important; }
-    }
-  </style>
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Simple gradient for the hero section */
+        .hero-gradient {
+            background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+        }
+
+        /* Adding a subtle pattern to the background for texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><g fill-rule="evenodd"><g fill="%23a7f3d0" fill-opacity="0.1"><path opacity=".5" d="M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z"/></g></g></svg>');
+            z-index: -1;
+            opacity: 0.5;
+        }
+    </style>
 </head>
-<body>
+<body class="text-gray-700">
 
-<div id="passwordScreen" class="container center">
-  <h2 class="company-title">SLN Enterprises</h2>
-  <h3>Enter Password</h3>
-  <input type="password" id="password" placeholder="Password" onkeydown="if(event.key==='Enter'){checkPassword()}" />
-  <button onclick="checkPassword()">Submit</button>
-  <p id="wrongPasswordMsg" style="color:red; display:none;">Incorrect Password</p>
-</div>
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-40 shadow-sm">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="admin.html" class="flex items-center">
+                <img src="SLN_logo.png" alt="SLN Enterprises Logo" class="h-10 w-10 mr-3 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/40x40/166534/f0fdf4?text=SLN';">
+                <h1 class="text-xl sm:text-2xl font-bold text-green-800">SLN Enterprises</h1>
+            </a>
+            <nav class="hidden md:flex items-center">
+                <a href="#benefits" class="text-gray-600 hover:text-green-700 transition duration-300 px-4">Benefits</a>
+                <a href="#gallery" class="text-gray-600 hover:text-green-700 transition duration-300 px-4">Gallery</a>
+                <a href="#contact" class="bg-green-600 text-white font-semibold px-5 py-2 rounded-full hover:bg-green-700 transition duration-300 shadow-md ml-4">Contact Us</a>
+            </nav>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-green-800 hover:text-green-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95">
+            <nav class="px-2 pt-2 pb-4 space-y-1 sm:px-3">
+                <a href="#benefits" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-700 hover:bg-green-50">Benefits</a>
+                <a href="#gallery" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-700 hover:bg-green-50">Gallery</a>
+                <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-700 hover:bg-green-50">Contact Us</a>
+            </nav>
+        </div>
+    </header>
 
-<div id="formScreen" class="container hidden">
-  <h2 class="company-title center">SLN Enterprises</h2>
-  <h3 class="center">ENTER CUSTOMER DETAILS</h3>
-  <form id="customerForm">
-    <label>Name and address:</label>
-    <input type="text" id="name" required>
-    <label>Contact number:</label>
-    <input type="tel" id="contact" required maxlength="10" pattern="\d{10}" oninput="this.value = this.value.replace(/\D/g, '').substring(0, 10);" placeholder="10 digits only">
-    <label>Invoice number:</label>
-    <input type="text" id="invoiceNo" required>
-    <label>Date:</label>
-    <input type="date" id="date" required>
-    <label>Place of Supply:</label>
-    <input type="text" id="place" required>
-    <label>Number of Items:</label>
-    <input type="number" id="itemCount" min="1" value="1" onchange="generateItemInputs()">
-    <div id="itemFields"></div>
-    <div class="center">
-      <button type="submit">Generate Invoice</button>
-      <button type="button" onclick="document.getElementById('customerForm').reset(); generateItemInputs();">Reset Fields</button>
-    </div>
-  </form>
-</div>
+    <main>
+        <section class="hero-gradient text-center py-20 md:py-32 px-6">
+            <div class="container mx-auto">
+                <h2 class="text-4xl md:text-6xl font-bold text-green-900 mb-4 reveal">Dine Sustainably. Choose Nature's Plate.</h2>
+                <p class="text-lg md:text-xl text-green-800 max-w-3xl mx-auto mb-8 reveal" style="transition-delay: 200ms;">
+                    Discover the elegance of nature with SLN Enterprises. Our 100% natural, biodegradable, and compostable areca leaf plates are the perfect choice for any occasion.
+                </p>
+                <div class="reveal" style="transition-delay: 400ms;">
+                    <a href="#contact" class="bg-white text-green-700 font-bold px-8 py-3 rounded-full hover:bg-gray-100 transition duration-300 shadow-lg text-lg">
+                        Make an Enquiry
+                    </a>
+                </div>
+            </div>
+        </section>
 
-<div id="invoice" class="hidden">
-  <div class="invoice-container">
-      <div class="title">Tax Invoice</div>
+        <section class="py-16 md:py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                     <h3 class="text-3xl font-bold text-green-800 mb-2 reveal">From Palm to Plate</h3>
+                     <p class="text-lg text-gray-600 max-w-2xl mx-auto reveal" style="transition-delay: 200ms;">Our plates are crafted from naturally fallen leaves of the Areca palm tree. No trees are cut down. It's a gift from nature, repurposed for your table with care and respect for the environment.</p>
+                </div>
+            </div>
+        </section>
 
-      <div class="invoice-header">
-          <div class="logo-container">
-              <img src="SLN_logo.png" alt="SLN Enterprises Logo" class="logo">
-              <div class="company-details">
-                  <div class="company-header-flex">
-                      <h1 class="company-name">SLN ENTERPRISES</h1>
-                      <table class="company-info-table">
-                        <tbody>
-                          <tr>
-                            <td>Phone: <strong>9739099538</strong></td>
-                            <td>Email: <strong>Slnplates@gmail.com</strong></td>
-                          </tr>
-                          <tr>
-                            <td>GSTIN: <strong>29BMQPN9871DIZ9</strong></td>
-                            <td>State: <strong>29-Karnataka</strong></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                  </div>
-                  <p>NO 500/535 S L N ENTERPRISES HOSAKERE ROAD Chelur 572117</p>
-              </div>
-          </div>
-      </div>
+        <section id="gallery" class="py-16 md:py-20">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                    <div class="md:col-span-1 space-y-8">
+                        <img src="Images/areca1.jpg" 
+                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/a7f3d0/14532d?text=Image+Not+Found';"
+                             alt="Areca leaf plates stacked" 
+                             class="reveal w-full h-auto object-cover rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300">
+                        <img src="Images/areca2.jpeg"
+                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/a7f3d0/14532d?text=Image+Not+Found';"
+                             alt="Areca leaf bowl" 
+                             class="reveal w-full h-auto object-cover rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300" style="transition-delay: 200ms;">
+                    </div>
+                    <div class="md:col-span-1">
+                         <img src="Images/areca3.jpg" 
+                              onerror="this.onerror=null;this.src='https://placehold.co/600x800/a7f3d0/14532d?text=Image+Not+Found';"
+                              alt="Areca plates in a dining setting" 
+                              class="reveal w-full h-auto object-cover rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300" style="transition-delay: 100ms;">
+                    </div>
+                    <div class="md:col-span-1 space-y-8">
+                        <img src="Images/areca4.jpeg" 
+                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/a7f3d0/14532d?text=Image+Not+Found';"
+                             alt="Different shapes of areca leaf plates" 
+                             class="reveal w-full h-auto object-cover rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300" style="transition-delay: 300ms;">
+                        <img src="Images/areca5.jpg"
+                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/a7f3d0/14532d?text=Image+Not+Found';"
+                             alt="Close-up of areca leaf texture" 
+                             class="reveal w-full h-auto object-cover rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300" style="transition-delay: 400ms;">
+                    </div>
+                </div>
+            </div>
+        </section>
 
-      <div class="details-section">
-          <div class="bill-to">
-              <table>
-                  <tbody><tr>
-                      <td style="width: 85px; font-weight: bold; vertical-align: top;">Bill To:</td>
-                      <td><strong><span id="invName"></span></strong></td>
-                  </tr>
-                  <tr>
-                      <td style="font-weight: bold;">Contact No:</td>
-                      <td><strong><span id="invContact"></span></strong></td>
-                  </tr>
-              </tbody></table>
-          </div>
-          <div class="invoice-details-box">
-              <strong style="font-size: 15px;">Invoice Details:</strong>
-              <table style="margin-top: 5px;">
-                  <tbody><tr>
-                      <td style="width: 120px;">No:</td>
-                      <td><strong><span id="invNo"></span></strong></td>
-                  </tr>
-                  <tr>
-                      <td>Date:</td>
-                      <td><strong><span id="invDate"></span></strong></td>
-                  </tr>
-                  <tr>
-                      <td>Place Of Supply:</td>
-                      <td><strong><span id="invPlace"></span></strong></td>
-                  </tr>
-              </tbody></table>
-          </div>
-      </div>
+        <section id="benefits" class="py-16 md:py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-green-800 mb-2 reveal">Why Choose Areca?</h3>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto reveal" style="transition-delay: 100ms;">Embrace a product that's as good for you as it is for the planet.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-green-50 p-8 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 reveal">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-green-600 text-white mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-green-900 mb-2">100% Natural & Eco-Friendly</h4>
+                        <p class="text-gray-600">Completely biodegradable and compostable, returning to the earth without a trace. Free from chemicals, plastics, and toxins.</p>
+                    </div>
+                    <div class="bg-green-50 p-8 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 reveal" style="transition-delay: 200ms;">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-green-600 text-white mb-6">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-green-900 mb-2">Strong & Durable</h4>
+                        <p class="text-gray-600">Surprisingly sturdy and lightweight. Our plates can handle hot and cold foods, liquids, and oils without getting soggy or losing shape.</p>
+                    </div>
+                    <div class="bg-green-50 p-8 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 reveal" style="transition-delay: 400ms;">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-green-600 text-white mb-6">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-green-900 mb-2">Elegant & Versatile</h4>
+                        <p class="text-gray-600">Each plate has a unique, natural wood-like texture. Perfect for weddings, parties, picnics, and corporate events. They are also microwave-safe.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-      <table class="items-table">
-          <thead>
-              <tr>
-                  <th class="col-slno">Sl No</th>
-                  <th class="col-item">Item Name</th>
-                  <th class="col-hsn">HSN / SAC</th>
-                  <th class="col-qty">Quantity</th>
-                  <th class="col-unit">Unit</th>
-                  <th class="col-price">Price/unit</th>
-                  <th class="col-amount">Amount</th>
-              </tr>
-          </thead>
-          <tbody id="invoiceItems">
-          </tbody>
-      </table>
-      
-      <table class="items-table totals-section" style="border-top: none;">
-          <tbody>
-              <tr>
-                  <td class="totals-spacer" colspan="5"></td>
-                  <td class="label" style="width: 10%;">Sub Total</td>
-                  <td class="value col-amount" style="width: 20%;"><span id="subTotalAmt"></span></td>
-              </tr>
-              <tr class="highlight-total">
-                  <td class="totals-spacer" colspan="5"></td>
-                  <td class="label">Total</td>
-                  <td class="value col-amount"><span id="totalAmt"></span></td>
-              </tr>
-              <tr>
-                  <td class="totals-spacer" colspan="5"></td>
-                  <td class="label">Received</td>
-                  <td class="value col-amount"></td>
-              </tr>
-              <tr>
-                  <td class="totals-spacer" colspan="5"></td>
-                  <td class="label">Balance</td>
-                  <td class="value col-amount"></td>
-              </tr>
-              <tr>
-                <td colspan="7" class="amount-words-cell">
-                    <strong>Invoice Amount in words:</strong><br>
-                    <span id="amtWords" style="font-weight:normal;"></span>
-                </td>
-              </tr>
-          </tbody>
-      </table>
+        <section id="contact" class="py-16 md:py-20 hero-gradient">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-4xl font-bold text-green-900 mb-2 reveal">Get in Touch</h3>
+                    <p class="text-lg text-green-800 max-w-2xl mx-auto reveal" style="transition-delay: 100ms;">We're here to help with your orders, enquiries, and collaborations.</p>
+                </div>
+                <div class="max-w-4xl mx-auto bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl p-8 md:p-12 reveal" style="transition-delay: 200ms;">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        <div class="contact-item">
+                            <div class="flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-700 mb-4 mx-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                            </div>
+                            <h4 class="text-xl font-semibold text-green-900 mb-1">Our Address</h4>
+                            <p class="text-gray-600">NO 500/535 S L N ENTERPRISES<br>HOSAKERE ROAD<br>Chelur 572117</p>
+                        </div>
+                        <div class="contact-item">
+                            <div class="flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-700 mb-4 mx-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                            </div>
+                            <h4 class="text-xl font-semibold text-green-900 mb-1">Phone</h4>
+                            <a href="tel:9739099538" class="text-gray-600 hover:text-green-700 transition-colors">9739099538</a>
+                        </div>
+                        <div class="contact-item">
+                            <div class="flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-700 mb-4 mx-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                            </div>
+                            <h4 class="text-xl font-semibold text-green-900 mb-1">Email</h4>
+                            <a href="mailto:Slnplates@gmail.com" class="text-gray-600 hover:text-green-700 transition-colors">Slnplates@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="bg-green-900 text-green-200 py-6">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2024 SLN Enterprises. All Rights Reserved. | Go Green, Go Natural.</p>
+        </div>
+    </footer>
 
-      <div class="bank-details-section">
-          <div class="bank-info">
-              <div class="bank-header">Bank Details</div>
-              <p>Name: <strong>INDIAN OVERSEAS BANK, HEGGERE</strong></p>
-              <p>Account No. : <strong>319802000000169</strong></p>
-              <p>IFSC code : <strong>IOBA0003198</strong></p>
-              <p>Account holder's name : <strong>SLN ENTERPRISES</strong></p>
-          </div>
-          <div class="signature-area">
-              <p style="font-weight: bold; text-align:center;">For SLN ENTERPRISES:</p>
-              <p style="margin-top: 50px; text-align:center;">Authorized Signatory</p>
-          </div>
-      </div>
-      
-      <div class="footer">
-          Thanks for doing business with us!
-      </div>
-  </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Mobile Menu Toggle ---
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileNavLinks = mobileMenu.querySelectorAll('a');
 
-  <div class="invoice-actions center">
-      <button onclick="goBack()">Go Back</button>
-      <button onclick="window.print()">Download as PDF</button>
-  </div>
-</div>
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
 
+            // Close mobile menu when a navigation link is clicked
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
 
-<script>
-  const correctPassword = "niru@sln123";
-  function checkPassword() {
-    const entered = document.getElementById("password").value;
-    if (entered === correctPassword) {
-      document.getElementById("wrongPasswordMsg").style.display = "none";
-      document.getElementById("passwordScreen").classList.add("hidden");
-      document.getElementById("formScreen").classList.remove("hidden");
-      document.getElementById('date').valueAsDate = new Date();
-      generateItemInputs();
-    } else {
-      document.getElementById("wrongPasswordMsg").style.display = "block";
-    }
-  }
+            // --- Intersection Observer for revealing elements on scroll ---
+            const revealElements = document.querySelectorAll('.reveal');
 
-  function generateItemInputs() {
-    const count = parseInt(document.getElementById("itemCount").value);
-    const container = document.getElementById("itemFields");
-    container.innerHTML = "";
-    for (let i = 0; i < count; i++) {
-      container.innerHTML += `
-        <h4>Item ${i + 1}</h4>
-        <label>Item Name:</label><input type="text" class="itemName" value="ARECA LEAF (EXPORT QUALITY)" required>
-        <label>HSN:</label><input type="text" class="hsn" value="4602" required>
-        <label>Price (per unit):</label><input type="number" class="price" value="4" step="0.01" required>
-        <label>Quantity:</label><input type="number" class="qty" required>
-        <hr>
-      `;
-    }
-  }
-  
-  function numberToWords(num) {
-    const a = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
-    const b = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
-    if ((num = num.toString()).length > 9) return "Overflow";
-    const n = ("000000000" + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-    if (!n) return;
-    let str = "";
-    str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + " " + a[n[1][1]]) + " Crore " : "";
-    str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + " " + a[n[2][1]]) + " Lakh " : "";
-    str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + " " + a[n[3][1]]) + " Thousand " : "";
-    str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + " " + a[n[4][1]]) + " Hundred " : "";
-    str += (n[5] != 0) ? ((str != "") ? "and " : "") + (a[Number(n[5])] || b[n[5][0]] + " " + a[n[5][1]]) : "";
-    if (str === "") return "Zero Rupees Only";
-    return str.trim() + " Rupees Only";
-  }
+            const observerOptions = {
+                root: null, // relative to the viewport
+                rootMargin: '0px',
+                threshold: 0.1 // 10% of the item must be visible
+            };
 
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // Optional: unobserve the element after it's visible so the animation doesn't re-trigger
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
 
-  document.getElementById("customerForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const name = document.getElementById("name").value;
-    const contact = document.getElementById("contact").value;
-    const invoiceNo = document.getElementById("invoiceNo").value;
-    const rawDate = document.getElementById("date").value;
-    const dateObj = new Date(rawDate);
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const year = dateObj.getFullYear();
-    const formattedDate = `${day}/${month}/${year}`;
-
-    const place = document.getElementById("place").value;
-    const names = document.querySelectorAll(".itemName");
-    const hsns = document.querySelectorAll(".hsn");
-    const qtys = document.querySelectorAll(".qty");
-    const prices = document.querySelectorAll(".price");
-
-    document.getElementById("invName").innerText = name;
-    document.getElementById("invContact").innerText = contact;
-    document.getElementById("invNo").innerText = invoiceNo;
-    document.getElementById("invDate").innerText = formattedDate;
-    document.getElementById("invPlace").innerText = place;
-
-    let total = 0;
-    let rows = "";
-
-    for (let i = 0; i < names.length; i++) {
-        const qty = parseFloat(qtys[i].value) || 0;
-        const price = parseFloat(prices[i].value) || 0;
-        const amt = qty * price;
-        total += amt;
-        rows += `<tr>
-            <td style="text-align: center;">${i + 1}</td>
-            <td>${names[i].value}</td>
-            <td style="text-align: center;">${hsns[i].value}</td>
-            <td style="text-align: right;">${qty.toLocaleString('en-IN')}</td>
-            <td style="text-align: center;">Pcs</td>
-            <td style="text-align: right;">₹ ${price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="col-amount">₹ ${amt.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-        </tr>`;
-    }
-
-    // MODIFIED: The block of code that added empty rows has been removed.
-
-    document.getElementById("invoiceItems").innerHTML = rows;
-
-    const formattedTotal = '₹ ' + total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    document.getElementById("subTotalAmt").innerText = formattedTotal;
-    document.getElementById("totalAmt").innerText = formattedTotal;
-    document.getElementById("amtWords").innerText = numberToWords(Math.round(total));
-
-    document.getElementById("formScreen").classList.add("hidden");
-    document.getElementById("invoice").classList.remove("hidden");
-  });
-
-  function goBack() {
-    document.getElementById("invoice").classList.add("hidden");
-    document.getElementById("formScreen").classList.remove("hidden");
-  }
-
-  // Set default date on initial load
-  document.getElementById('date').valueAsDate = new Date();
-</script>
+            revealElements.forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
 </body>
 </html>
